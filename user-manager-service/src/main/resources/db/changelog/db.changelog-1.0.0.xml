@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1.0.0-Init-USER-MANAGER" author="Syndiaye">
+        <!-- jpa sequences -->
+        <createTable tableName="jpa_sequences">
+            <column name="seq_key" type="VARCHAR(255)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="seq_value" defaultValueComputed="NULL::numeric" type="numeric(20)"/>
+        </createTable>
+
+        <!-- table organization configuration -->
+        <createTable tableName="organizationconfiguration">
+            <column name="organizationconfigurationid" type="numeric(20)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="amountmaxresto" type="numeric(20)"/>
+            <column name="amountmaxmarket" type="numeric(20)"/>
+            <column name="amountmaxgasstation" type="numeric(20)"/>
+            <column name="amountmaxtelephony" type="numeric(20)"/>
+            <column name="percentageorganization" type="numeric(20)"/>
+            <column name="percentageemployee" type="numeric(20)"/>
+            <column name="creationdate" type="TIMESTAMP(6) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modificationdate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+        </createTable>
+
+        <!-- table organization -->
+        <createTable tableName="organization">
+            <column name="organizationid" type="numeric(20)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="numeric(100)"/>
+            <column name="actualquota" type="numeric(20)"/>
+            <column name="maxquota" type="numeric(20)"/>
+            <column name="enrolled_module" type="VARCHAR(50)"/>
+            <column name="reference" type="varchar(50)"/>
+            <column name="organizationconfigurationid" type="numeric(20)">
+                <constraints nullable="false" foreignKeyName="fk_organization_organizationConfiguration"
+                             references="organizationconfiguration(organizationconfigurationid)"/>
+            </column>
+            <column name="creationdate" type="TIMESTAMP(6) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modificationdate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+        </createTable>
+
+        <!-- table role -->
+        <createTable tableName="role">
+            <column name="roleid" type="numeric(20)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(50)"/>
+            <column name="description" type="VARCHAR(100)"/>
+            <column name="external_reference" type="varchar(50)"/>
+            <column name="creationdate" type="TIMESTAMP(6) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modificationdate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+        </createTable>
+
+        <!-- table role permission -->
+        <createTable tableName="rolepermission">
+            <column name="roleid" type="numeric(20)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="rolepermission_pkey"/>
+            </column>
+            <column name="permission" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="rolepermission_pkey"/>
+            </column>
+        </createTable>
+
+        <!-- table users -->
+        <createTable tableName="users">
+            <column name="userid" type="numeric(20)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="firstname" type="VARCHAR(100)"/>
+            <column name="lastname" type="VARCHAR(100)"/>
+            <column name="username" type="VARCHAR(50)">
+                <constraints unique="true"/>
+            </column>
+            <column name="email" type="VARCHAR(20)"/>
+            <column name="phonenumber" type="VARCHAR(13)"/>
+            <column name="userstatus" type="boolean"/>
+            <column name="roleid" type="numeric(20)">
+                <constraints nullable="false" foreignKeyName="fk_users_role" references="role(roleid)"/>
+            </column>
+            <column name="organizationid" type="numeric(20)">
+                <constraints nullable="false" foreignKeyName="fk_users_organization" references="organization(organizationid)"/>
+            </column>
+            <column name="creationdate" type="TIMESTAMP(6) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modificationdate" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+        </createTable>
+
+    </changeSet>
+
+</databaseChangeLog>

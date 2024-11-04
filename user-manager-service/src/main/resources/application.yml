@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME:onepay}
+    password: ${DB_PASSWORD:onepay}
+    hikari:
+      maximum-pool-size: 3
+      connection-timeout: 10000
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:ONEPAY_USER_MANAGER}
+    dbcp2:
+      test-while-idle: true
+      validation-query: SELECT 1
+
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        show_sql: false
+        ddl-auto: none
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          time-zone: UTC
+          lob:
+            non_contextual_creation: true
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-1.0.0.xml
+    enabled: true
+
+  application:
+    name: OnePay-UserManager
